@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
+# SPA fallback so /admin and client routes load index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
