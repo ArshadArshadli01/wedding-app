@@ -1,27 +1,7 @@
-import { motion } from "framer-motion";
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
-import { apiUrl } from "../apiBase";
-
-const containerVariants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.25,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 40 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  },
-};
+import { apiUrl } from "@/lib/apiBase";
 
 const MessagesSection = () => {
   const [messages, setMessages] = useState([]);
@@ -38,7 +18,15 @@ const MessagesSection = () => {
       const res = await fetch(apiUrl("/api/messages"));
       if (!res.ok) throw new Error("Failed to load");
       const data = await res.json();
-      setMessages(Array.isArray(data) ? data : []);
+      const list = Array.isArray(data) ? data : [];
+      setMessages(
+        list.map((row) => ({
+          id: row.id,
+          name: row.name ?? "",
+          message: row.message ?? "",
+          created_at: row.created_at,
+        }))
+      );
     } catch {
       setError("Təbrikləri yükləmək mümkün olmadı.");
       setMessages([]);
@@ -71,7 +59,15 @@ const MessagesSection = () => {
       if (!res.ok) {
         throw new Error(data.error || "Save failed");
       }
-      setMessages((prev) => [data, ...prev]);
+      setMessages((prev) => [
+        {
+          id: data.id,
+          name: data.name ?? "",
+          message: data.message ?? "",
+          created_at: data.created_at,
+        },
+        ...prev,
+      ]);
       setName("");
       setMessage("");
     } catch {
@@ -153,28 +149,21 @@ const MessagesSection = () => {
         {loading ? (
           <p className="text-[#958c83] italic">Yüklənir…</p>
         ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-            className="space-y-6 text-left w-full flex flex-col items-center"
-          >
+          <div className="space-y-6 text-left w-full flex flex-col items-center">
             {messages.map((item) => (
-              <motion.div
-                key={item.id}
-                variants={itemVariants}
+              <div
+                key={String(item.id)}
                 className="bg-[#faf7f4] w-full max-w-[512px] border border-gray-200 rounded-md p-4 sm:p-6 md:p-8 shadow-sm"
               >
                 <h3 className="text-lg md:text-xl font-semibold text-[#2a2622]">
                   {item.name}
                 </h3>
-                <p className="mt-3 text-[#958c83] italic leading-relaxed">
+                <p className="mt-3 text-[#958c83] italic leading-relaxed whitespace-pre-wrap break-words">
                   &ldquo;{item.message}&rdquo;
                 </p>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

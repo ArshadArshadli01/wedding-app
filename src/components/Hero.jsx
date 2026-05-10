@@ -1,5 +1,6 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
-import musicFile from "../assets/music.mp3";
 
 const Hero = () => {
   const videoRef = useRef(null);
@@ -35,12 +36,7 @@ const Hero = () => {
   return (
     <section className="relative w-screen h-screen overflow-hidden">
       {/* AUDIO ELEMENT */}
-      <audio
-        ref={audioRef}
-        src={musicFile}
-        loop
-        autoPlay
-      />
+      <audio ref={audioRef} src="/music.mp3" loop autoPlay />
 
       {/* VIDEO */}
       <video
@@ -51,10 +47,7 @@ const Hero = () => {
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover z-0"
       >
-        <source
-          src={`${process.env.PUBLIC_URL}/wedding.mp4`}
-          type="video/mp4"
-        />
+        <source src="/wedding.mp4" type="video/mp4" />
       </video>
 
       <div className="absolute inset-0 bg-black/30 z-10" />

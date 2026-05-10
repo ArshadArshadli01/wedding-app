@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Opening overlay hint: CSS animation avoids Framer Motion SSR/client style mismatches */
+@keyframes opening-screen-hint-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.opening-screen-hint {
+  opacity: 0;
+  animation: opening-screen-hint-fade 1.5s ease-out 1.2s forwards;
+}

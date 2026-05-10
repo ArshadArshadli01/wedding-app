@@ -1,6 +1,8 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiUrl } from "../apiBase";
+import Link from "next/link";
+import { apiUrl } from "@/lib/apiBase";
 
 const TOKEN_KEY = "wedding_admin_token";
 
@@ -12,7 +14,7 @@ function authHeaders(token) {
 }
 
 const AdminPanel = () => {
-  const [token, setToken] = useState(() => sessionStorage.getItem(TOKEN_KEY));
+  const [token, setToken] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(null);
@@ -27,6 +29,15 @@ const AdminPanel = () => {
   const [editMessage, setEditMessage] = useState("");
   const [savingId, setSavingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem(TOKEN_KEY);
+      if (stored) setToken(stored);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const loadMessages = useCallback(async () => {
     setListLoading(true);
@@ -208,7 +219,7 @@ const AdminPanel = () => {
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-[#958c83]">
-            <Link to="/" className="underline hover:text-[#2c2418]">
+            <Link href="/" className="underline hover:text-[#2c2418]">
               Ana səhifəyə qayıt
             </Link>
           </p>
@@ -247,7 +258,7 @@ const AdminPanel = () => {
               Çıxış
             </button>
             <Link
-              to="/"
+              href="/"
               className="text-sm rounded-md bg-[#2c2418] px-3 py-1.5 text-[#faf7f4] hover:bg-[#3d3428]"
             >
               Sayt

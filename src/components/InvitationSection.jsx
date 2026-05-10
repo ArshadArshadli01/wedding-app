@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 
 const WEDDING_TIMESTAMP = Date.UTC(2026, 5, 5, 20, 0, 0);
@@ -17,15 +19,24 @@ function getTimeLeft() {
   };
 }
 
+const EMPTY_COUNTDOWN = {
+  days: "00",
+  hours: "00",
+  minutes: "00",
+  seconds: "00",
+};
+
+/** SSR + first paint must match; real values only after mount (see React hydration). */
 const useCountdown = () => {
-  const [time, setTime] = useState(getTimeLeft);
+  const [time, setTime] = useState(null);
 
   useEffect(() => {
+    setTime(getTimeLeft());
     const timer = setInterval(() => setTime(getTimeLeft()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  return time;
+  return time ?? EMPTY_COUNTDOWN;
 };
 
 const Separator = () => (
